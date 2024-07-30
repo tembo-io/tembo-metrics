@@ -1,0 +1,118 @@
+# Number of replica pods to run
+replicaCount: 1
+# Application-specific configuration
+config:
+  # Log level for the application (e.g., debug, info, warn, error)
+  logLevel: "info"
+  # AWS region for the application to use
+  region: "us-east-1"
+  # Host address on which the application will listen
+  serverHost: "0.0.0.0"
+  # Port on which the application will listen
+  serverPort: 8080
+
+image:
+  # Docker image repository
+  repository: quay.io/tembo/tembo-metrics
+  # Image pull policy for Kubernetes
+  pullPolicy: IfNotPresent
+  # Tag of the image to use. "latest" will use the most recent tag
+  tag: "latest"
+
+# Configuration for Kubernetes probes
+probes:
+  # Liveness probe configuration
+  liveness:
+    httpGet:
+      # Endpoint for liveness checks
+      path: /healthz
+      port: http
+    # Number of seconds to wait before performing the first liveness probe
+    initialDelaySeconds: 10
+    # How often (in seconds) to perform the probe
+    periodSeconds: 10
+    # Number of times the probe times out before giving up
+    failureThreshold: 3
+  # Readiness probe configuration
+  readiness:
+    httpGet:
+      # Endpoint for readiness checks
+      path: /readyz
+      port: http
+    # Number of seconds to wait before performing the first readiness probe
+    initialDelaySeconds: 5
+    # How often (in seconds) to perform the probe
+    periodSeconds: 10
+    # Number of times the probe times out before giving up
+    failureThreshold: 3
+
+prometheus:
+  # Enable Prometheus scraping
+  scrape: true
+  # Path where metrics are exposed
+  path: /metrics
+  # Port where metrics are exposed
+  port: 8080
+
+prometheusRules:
+  # Enable creation of PrometheusRules for alerting
+  create: true
+  # Additional labels to add to the PrometheusRule resource
+  additionalLabels: {}
+  # Rules configuration
+  rules:
+    # Each item in this list represents a group of rules
+    - name: CloudFormationStackQuota
+      rules:
+        # Warning alert when usage is over 90% of quota
+        - alert: CloudFormationStackQuotaWarning
+          expr: (tembo_cloudformation_stack_usage / tembo_cloudformation_stack_quota) * 100 > 90
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "CloudFormation stack usage nearing quota"
+            description: "CloudFormation stack usage is at {{ $value }}% of the quota"
+        # Critical alert when usage is over 95% of quota
+        - alert: CloudFormationStackQuotaCritical
+          expr: (tembo_cloudformation_stack_usage / tembo_cloudformation_stack_quota) * 100 > 95
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "CloudFormation stack usage critically close to quota"
+            description: "CloudFormation stack usage is at {{ $value }}% of the quota"
+
+# Kubernetes service configuration
+service:
+  # Type of service to create
+  type: ClusterIP
+  # Port on which the service will listen
+  port: 8080
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+  # Annotations to add to the service account
+  annotations:
+    {}
+    # Uncomment and modify for AWS IAM role
+    # eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT_ID:role/IAM_ROLE_NAME
+    # Uncomment and modify for GCP service account
+    # iam.gke.io/gcp-service-account: GSA_NAME@PROJECT_ID.iam.gserviceaccount.com
+
+# Resource requests and limits for the pod
+resources:
+  limits:
+    # Maximum amount of CPU the container can use
+    cpu: 100m
+    # Maximum amount of memory the container can use
+    memory: 250Mi
+  requests:
+    # Minimum amount of CPU the container needs to function
+    cpu: 50m
+    # Minimum amount of memory the container needs to function
+    memory: 128Mi

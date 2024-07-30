@@ -1,0 +1,18 @@
+{{- if and .Values.prometheusRules.create (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1") }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "tembo-metrics.fullname" . }}
+  labels:
+    {{- include "tembo-metrics.labels" . | nindent 4 }}
+    {{- with .Values.prometheusRules.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  groups:
+  {{- range .Values.prometheusRules.rules }}
+  - name: {{ .name }}
+    rules:
+    {{- toYaml .rules | nindent 4 }}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,6 @@
+apiVersion: v2
+name: tembo-metrics
+description: A Helm chart for Tembo Metrics
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

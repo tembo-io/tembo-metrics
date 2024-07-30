@@ -1,0 +1,16 @@
+{{- if and .Values.prometheus.scrape (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1") }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "tembo-metrics.fullname" . }}
+  labels:
+    {{- include "tembo-metrics.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "tembo-metrics.selectorLabels" . | nindent 6 }}
+  endpoints:
+  - port: http
+    path: {{ .Values.prometheus.path }}
+    interval: 30s
+{{- end }}
