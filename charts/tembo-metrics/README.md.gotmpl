@@ -1,0 +1,37 @@
+# Tembo Metrics Helm Chart
+
+## Introduction
+
+Tembo Metrics is a Prometheus exporter that provides metrics related to AWS CloudFormation stack usage and quotas. This Helm chart deploys Tembo Metrics in a Kubernetes cluster, making it easy to monitor your CloudFormation resources and set up alerts for quota limits.
+
+## Prerequisites
+
+- Kubernetes 1.16+
+- Helm 3.0+
+- AWS credentials configured (either through AWS IAM Roles for Service Accounts or environment variables)
+
+## Installing the Chart
+
+To install the chart with the release name `tembo-metrics`:
+
+```bash
+helm install tembo-metrics ./tembo-metrics
+```
+
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.homepageLine" . }}
+
+{{ template "chart.maintainersSection" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}
