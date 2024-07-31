@@ -25,6 +25,7 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/usr/local/bin/tembo-metrics"]
           args:
             - "--log-level"
             - "{{ .Values.config.logLevel }}"
