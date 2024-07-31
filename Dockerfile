@@ -1,15 +1,16 @@
-FROM rust:1.80 as builder
+FROM rust:1.80-alpine as builder
 
 WORKDIR /tembo-metrics
 
 COPY . .
 
-RUN cargo build --release
+RUN apk update && apk upgrade && apk add --no-cache musl-dev openssl ca-certificates
 
-FROM debian:bookworm-slim
+RUN cargo build --release --target x86_64-unknown-linux-musl
 
-RUN apt-get update && apt-get upgrade -y && apt-get clean && rm -rf /var/lib/apt/lists/*
+FROM scratch
 
-COPY --from=builder /tembo-metrics/target/release/tembo-metrics /usr/local/bin/tembo-metrics
+COPY --from=builder /tembo-metrics/target/x86_64-unknown-linux-musl/release/tembo-metrics /tembo-metrics
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
-CMD ["tembo-metrics"]
+CMD ["/tembo-metrics"]

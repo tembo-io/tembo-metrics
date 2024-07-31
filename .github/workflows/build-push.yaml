@@ -26,6 +26,7 @@ jobs:
         id: tags
         run: |
           BRANCH_NAME="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+          echo "using branch: ${BRANCH_NAME}"
           if [ "${BRANCH_NAME}" == "main" ]; then
             echo "tag_latest=true" >> $GITHUB_OUTPUT
             echo "tag_cargo=true" >> $GITHUB_OUTPUT

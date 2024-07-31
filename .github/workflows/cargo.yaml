@@ -1,4 +1,4 @@
-name: Cargo lint and test
+name: Cargo lint
 
 on:
   push:

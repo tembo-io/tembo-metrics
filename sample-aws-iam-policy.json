@@ -1,0 +1,23 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1722444480676",
+      "Action": [
+        "cloudformation:ListStacks"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Sid": "Stmt1722444523636",
+      "Action": [
+        "servicequotas:GetServiceQuota",
+        "servicequotas:ListServiceQuotas",
+        "servicequotas:ListServices"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
