@@ -6,11 +6,12 @@ COPY . .
 
 RUN apk update && apk upgrade && apk add --no-cache musl-dev openssl ca-certificates
 
-RUN cargo build --release --target x86_64-unknown-linux-musl
+RUN cargo build --release
 
-FROM scratch
+FROM alpine:3.20
 
-COPY --from=builder /tembo-metrics/target/x86_64-unknown-linux-musl/release/tembo-metrics /tembo-metrics
-COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+RUN apk update && apk upgrade && apk add --no-cache ca-certificates && rm -rf /var/cache/apk/*
 
-CMD ["/tembo-metrics"]
+COPY --from=builder /tembo-metrics/target/release/tembo-metrics /usr/local/bin/tembo-metrics
+
+CMD ["/usr/local/bin/tembo-metrics"]
