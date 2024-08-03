@@ -20,8 +20,18 @@ Tembo Metrics currently exposes the following Prometheus metrics:
    - Description: The maximum number of CloudFormation stacks allowed in the account/region
 
 2. `tembo_cloudformation_stack_usage`: AWS CloudFormation stacks in use
+
    - Type: Gauge
    - Description: The current number of CloudFormation stacks in the account/region
+
+3. `tembo_iam_role_quota`: AWS IAM Role quota (L-FE177D64)
+
+   - Type: Gauge
+   - Description: The maximum number of AWS IAM Roles in the account/region
+
+4. `tembo_iam_role_usage`: AWS IAM Roles in use
+   - Type: Gauge
+   - Description: The current number of AWS IAM Roles in the account/region
 
 Example metrics output:
 
@@ -32,6 +42,12 @@ tembo_cloudformation_stack_quota 2000
 HELP tembo_cloudformation_stack_usage AWS CloudFormation stacks in use
 TYPE tembo_cloudformation_stack_usage gauge
 tembo_cloudformation_stack_usage 605
+# HELP tembo_iam_role_quota AWS IAM role quota (L-FE177D64)
+# TYPE tembo_iam_role_quota gauge
+tembo_iam_role_quota 1000
+# HELP tembo_iam_role_usage AWS IAM roles in use
+# TYPE tembo_iam_role_usage gauge
+tembo_iam_role_usage 716
 ```
 
 ## Installation
