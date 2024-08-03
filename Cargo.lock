@@ -382,6 +382,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "aws-sdk-iam"
+version = "1.38.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5cf3aa1d75176e2ddee88400b39d0b08789742c6beb66e4d2188fa74fb6c7095"
+dependencies = [
+ "aws-credential-types",
+ "aws-runtime",
+ "aws-smithy-async",
+ "aws-smithy-http",
+ "aws-smithy-json",
+ "aws-smithy-query",
+ "aws-smithy-runtime",
+ "aws-smithy-runtime-api",
+ "aws-smithy-types",
+ "aws-smithy-xml",
+ "aws-types",
+ "http 0.2.12",
+ "once_cell",
+ "regex-lite",
+ "tracing",
+]
+
+[[package]]
 name = "aws-sdk-servicequotas"
 version = "1.36.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1852,6 +1875,7 @@ dependencies = [
  "actix-web",
  "aws-config",
  "aws-sdk-cloudformation",
+ "aws-sdk-iam",
  "aws-sdk-servicequotas",
  "clap",
  "parking_lot",

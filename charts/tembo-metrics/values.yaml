@@ -82,6 +82,24 @@ prometheusRules:
           annotations:
             summary: "CloudFormation stack usage critically close to quota"
             description: "CloudFormation stack usage is at {{ $value }}% of the quota"
+        # Warning alert when usage is over 90% of quota
+        - alert: AWSIAMRoleQuotaWarning
+          expr: (tembo_iam_role_usage / tembo_iam_role_quota) * 100 > 85
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "AWS IAM Role usage nearing quota"
+            description: "AWS IAM role usage is at {{ $value }}% of the quota"
+        # Critical alert when usage is over 95% of quota
+        - alert: AWSIAMRoleQuotaCritical
+          expr: (tembo_iam_role_usage / tembo_iam_role_quota) * 100 > 95
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "AWS IAM Role usage critically close to quota"
+            description: "AWS IAM Role usage is at {{ $value }}% of the quota"
 
 # Kubernetes service configuration
 service:

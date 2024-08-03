@@ -1,23 +1,79 @@
 {
-  "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "Stmt1722444480676",
       "Action": [
-        "cloudformation:ListStacks"
+        "cloudformation:GetResource",
+        "cloudformation:GetResourceRequestStatus",
+        "cloudformation:ListResourceRequests",
+        "cloudformation:ListResources",
+        "cloudformation:DescribeStacks",
+        "cloudformation:ListChangeSets",
+        "cloudformation:ListExports",
+        "cloudformation:ListGeneratedTemplates",
+        "cloudformation:ListImports",
+        "cloudformation:ListResourceScanRelatedResources",
+        "cloudformation:ListResourceScanResources",
+        "cloudformation:ListResourceScans",
+        "cloudformation:ListStackInstanceResourceDrifts",
+        "cloudformation:ListStackInstances",
+        "cloudformation:ListStackResources",
+        "cloudformation:ListStacks",
+        "cloudformation:ListStackSetAutoDeploymentTargets",
+        "cloudformation:ListStackSetOperationResults",
+        "cloudformation:ListStackSetOperations",
+        "cloudformation:ListStackSets",
+        "cloudformation:ListTypeRegistrations",
+        "cloudformation:ListTypes",
+        "cloudformation:ListTypeVersions",
+        "cloudformation:DescribeAccountLimits",
+        "cloudformation:DescribeStackDriftDetectionStatus",
+        "cloudformation:DescribeStackEvents",
+        "cloudformation:DescribeStackInstance",
+        "cloudformation:DescribeStackResource",
+        "cloudformation:DescribeStackResourceDrifts",
+        "cloudformation:DescribeStackResources",
+        "cloudformation:DescribeStackSet",
+        "cloudformation:DescribeStackSetOperation",
+        "cloudformation:DetectStackDrift",
+        "cloudformation:DetectStackResourceDrift",
+        "cloudformation:DetectStackSetDrift",
+        "cloudformation:GetStackPolicy"
       ],
       "Effect": "Allow",
-      "Resource": "*"
+      "Resource": "*",
+      "Sid": "TemboMetricsCFNAccess"
     },
     {
-      "Sid": "Stmt1722444523636",
       "Action": [
+        "servicequotas:GetAssociationForServiceQuotaTemplate",
+        "servicequotas:GetAWSDefaultServiceQuota",
+        "servicequotas:GetRequestedServiceQuotaChange",
         "servicequotas:GetServiceQuota",
+        "servicequotas:GetServiceQuotaIncreaseRequestFromTemplate",
+        "servicequotas:ListAWSDefaultServiceQuotas",
+        "servicequotas:ListRequestedServiceQuotaChangeHistory",
+        "servicequotas:ListRequestedServiceQuotaChangeHistoryByQuota",
+        "servicequotas:ListServiceQuotaIncreaseRequestsInTemplate",
         "servicequotas:ListServiceQuotas",
-        "servicequotas:ListServices"
+        "servicequotas:ListServices",
+        "servicequotas:ListTagsForResource"
       ],
       "Effect": "Allow",
+      "Resource": "*",
+      "Sid": "TemboMetericsServiceQuotasAccess"
+    },
+    {
+      "Sid": "TemboMetricsIAMAccess",
+      "Effect": "Allow",
+      "Action": [
+        "iam:ListRoles",
+        "iam:ListRoleTags",
+        "iam:ListRolePolicies",
+        "iam:GetRole",
+        "iam:GetRolePolicy"
+      ],
       "Resource": "*"
     }
-  ]
+  ],
+  "Version": "2012-10-17"
 }

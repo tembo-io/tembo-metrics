@@ -1,6 +1,7 @@
 use crate::metrics::Metrics;
 use aws_config::{meta::region::RegionProviderChain, BehaviorVersion};
 use aws_sdk_cloudformation::config::Region as cf_region;
+use aws_sdk_iam::config::Region as iam_region;
 use aws_sdk_servicequotas::config::Region as sq_region;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
@@ -11,6 +12,7 @@ pub struct State {
     pub registry: prometheus::Registry,
     pub sq_client: aws_sdk_servicequotas::Client,
     pub cfn_client: aws_sdk_cloudformation::Client,
+    pub iam_client: aws_sdk_iam::Client,
     pub metrics: Metrics,
     pub last_update: Mutex<std::time::Instant>,
     pub updating: AtomicBool,
@@ -31,8 +33,15 @@ impl State {
             .load()
             .await;
 
+        let iam_region_provider = RegionProviderChain::first_try(iam_region::new(region.clone()));
+        let iam_aws_config = aws_config::defaults(BehaviorVersion::v2024_03_28())
+            .region(iam_region_provider)
+            .load()
+            .await;
+
         let sq_client = aws_sdk_servicequotas::Client::new(&sq_aws_config);
         let cfn_client = aws_sdk_cloudformation::Client::new(&cf_aws_config);
+        let iam_client = aws_sdk_iam::Client::new(&iam_aws_config);
 
         // Setup Prometheus registry
         let registry = prometheus::Registry::new();
@@ -46,14 +55,22 @@ impl State {
             "AWS CloudFormation stacks in use",
         )
         .unwrap();
+        let iam_role_quota =
+            prometheus::IntGauge::new("tembo_iam_role_quota", "AWS IAM role quota (L-FE177D64)")
+                .unwrap();
+        let iam_role_usage =
+            prometheus::IntGauge::new("tembo_iam_role_usage", "AWS IAM roles in use").unwrap();
 
         registry.register(Box::new(cf_stack_quota.clone())).unwrap();
         registry.register(Box::new(cf_stack_usage.clone())).unwrap();
+        registry.register(Box::new(iam_role_quota.clone())).unwrap();
+        registry.register(Box::new(iam_role_usage.clone())).unwrap();
 
         let state = Arc::new(Self {
             registry,
             sq_client,
             cfn_client,
+            iam_client,
             metrics: Metrics::new(),
             last_update: Mutex::new(std::time::Instant::now()),
             updating: AtomicBool::new(false),
@@ -78,6 +95,9 @@ impl State {
 
         // Test CloudFormation client
         let _ = state.cfn_client.list_stacks().send().await?;
+
+        // Test IAM client
+        let _ = state.iam_client.list_roles().send().await?;
 
         Ok(())
     }
