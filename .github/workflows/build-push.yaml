@@ -63,12 +63,12 @@ jobs:
           - repository: tembo-io/app-deploy-dev
             subdirectory: dev
             branch: main
-          # - repository: tembo-io/app-deploy
-          #   subdirectory: staging
-          #   branch: staging-updates
-          # - repository: tembo-io/app-deploy
-          #   subdirectory: prod
-          #   branch: prod-updates
+          - repository: tembo-io/app-deploy
+            subdirectory: staging
+            branch: staging-updates
+          - repository: tembo-io/app-deploy
+            subdirectory: prod
+            branch: prod-updates
     needs:
       - build_and_push_images
     steps:
