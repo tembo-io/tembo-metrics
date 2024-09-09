@@ -13,7 +13,7 @@ pub async fn get_cf_stack_quota(client: &Client) -> Result<i64, Box<dyn std::err
     let quota = resp
         .quota
         .and_then(|q| q.value)
-        .ok_or("Failed to get Cloudformation Stack quote")?;
+        .ok_or("Failed to get Cloudformation Stack quota")?;
 
     Ok(quota as i64)
 }
@@ -28,10 +28,12 @@ pub async fn get_iam_role_quota(client: &Client) -> Result<i64, Box<dyn std::err
         .send()
         .await?;
 
+    println!("resp: {:?}", resp);
+
     let quota = resp
         .quota
         .and_then(|q| q.value)
-        .ok_or("Failed to get IAM Role quote")?;
+        .ok_or("Failed to get IAM Role quota")?;
 
     Ok(quota as i64)
 }
